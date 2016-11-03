@@ -1,0 +1,139 @@
+/**
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2016 OA Wu Design
+ */
+
+@import "_oa";
+
+* {
+  &, &:after, &:before {
+    vertical-align: top;
+    @include box-sizing(border-box);
+    @include selection(rgba(150, 200, 255, 1), rgba(255, 255, 255, 1));
+    @include font-smoothing(antialiased);
+  }
+}
+
+html {
+  padding: 0;
+  height: 100%;
+
+
+  body {
+    position: relative;
+    margin: 0;
+    min-height: 100%;
+    font-size: medium;
+    font-family: Monaco, "微軟正黑體", "Microsoft JhengHei";
+    color: rgba(50, 50, 50, 0.8);
+
+    @include font-smoothing(antialiased);
+
+    > h1 {
+      margin: 0;
+    }
+  }
+}
+
+#demos {
+  @include clearfix();
+  padding: 10px;
+  
+  .demo {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid rgba(39, 40, 34, .20);
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 1.00);
+    @include transition(background-color .3s);
+    @include border-radius(2px);
+    
+    
+    &:hover {
+      background-color: rgba(233, 233, 233, 1.00);
+    }
+  }
+}
+#img {
+  display: none;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.2);
+
+  img {
+    display: inline-block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+}
+#menu {
+  position: absolute;
+  top: 0;
+  left: -350px;
+  display: inline-block;
+  width: 350px;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(255, 255, 255, 1.00);
+  border-right: 1px solid rgba(39, 40, 34, .200);
+  @include opacity(0);
+  @include box-shadow(0 5px 10px rgba(0, 0, 0, .2));
+  @include transition(left .3s, opacity .3s);
+  
+
+  div {
+    position: relative;
+    display: inline-block;
+    width: calc(100% - 10px * 2);
+    margin: 10px;
+    height: 200px;
+    overflow: hidden;
+    border: 1px solid rgba(39, 40, 34, .200);
+    @include border-radius(2px);
+
+    img {
+      display: inline-block;
+    }
+
+    &.f {
+      border: 5px solid rgba(39, 40, 34, 1);
+    }
+
+    &:after {
+      content: attr(title);
+      position: absolute;
+      bottom: -100px;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+      padding: 5px;
+      @include overflow-docx3();
+      background-color: rgba(39, 40, 34, .50);
+      color: white;
+      @include transition(bottom .3s, background-color .3s);
+      
+    }
+    &.f, &:hover {
+      &:after {
+        bottom: 0;
+        background-color: rgba(39, 40, 34, .750);
+      }
+    }
+  }
+}
+body {
+  &.s {
+    > h1, > hr, #demos {
+      display: none;
+    }
+    #img {
+      display: inline-block;
+    }
+    #menu {
+      &.s {
+        left: 0;
+        @include opacity(1);
+      }
+    }
+  }
+}
