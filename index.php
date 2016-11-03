@@ -44,6 +44,7 @@ $dirs = array ();
 foreach ($dir1s as $dir1) {
   $files = array ();
   Tool::mergeArrayRecursive (Tool::directoryMap ('demos/' . $dir1), $files, 'demos/' . $dir1);
+  sort ($files);
   $dirs[$dir1] = $files;
 }
 
