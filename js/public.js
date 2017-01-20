@@ -50,7 +50,7 @@ $(function () {
         $mobile.addClass (result.mobile ? 'mobile' : null)
 
         $bottom.empty ().append (result.images.map (function (t) {
-          return $('<div />').append ($('<img />').attr ('src', t.url.w100)).data ('url', t.url.ori);
+          return $('<div />').append ($('<img />').attr ('src', t.url.w200)).data ('url', t.url.ori);
         }));
 
         $bottom.find ('>div').imgLiquid ({verticalAlign: 'center'}).click (function () {
