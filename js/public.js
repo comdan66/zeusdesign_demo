@@ -18,72 +18,84 @@ $(function () {
   var $main = $('#main');
   var $mobile = $('#mobile');
   var $bottom = $('#bottom');
-  if (!hash.length) window.location.assign ('https://www.zeusdesign.com.tw/'); 
-  
-  function ajaxError (result) { console.error (result.responseText); }
-  function IsJsonString (str) { try { JSON.parse (str); } catch (e) { return false; } return true; }
+  var $back = $('#back');
+  var $title = $('title');
 
-  function getInfo (psw) {
-    $.ajax ({
-      url: 'https://' + url + '/api/demos/show/',
-      async: true, cache: false, dataType: 'json', type: 'GET',
-      data: {
-        uid: hash,
-        psw: psw
-      }
-    })
-    .done (function (result) {
-      
-      $main.attr ('title', result.name);
-      $mobile.addClass (result.mobile ? 'mobile' : null)
+  window.onhashchange = function () {
+    location.reload();
+  };
+  if (!hash.length) {
+    $main.attr ('title', '找不到該資料。');
+    $back.addClass ('show');
+    setTimeout (function () {
+      window.location.assign ('https://www.zeusdesign.com.tw/');
+    }, 5 * 1000);
+  } else {
+    
+    function ajaxError (result) { console.error (result.responseText); }
+    function IsJsonString (str) { try { JSON.parse (str); } catch (e) { return false; } return true; }
 
-      $bottom.empty ().append (result.images.map (function (t) {
-        return $('<div />').append ($('<img />').attr ('src', t.url.w100)).data ('url', t.url.ori);
-      }));
+    function getInfo (psw) {
+      $.ajax ({
+        url: 'https://' + url + '/api/demos/show/',
+        async: true, cache: false, dataType: 'json', type: 'GET',
+        data: {
+          uid: hash,
+          psw: psw
+        }
+      })
+      .done (function (result) {
+        $title.text (result.name + ' - 宙思提案系統');
+        $main.attr ('title', result.name);
+        $mobile.addClass (result.mobile ? 'mobile' : null)
 
-      $bottom.find ('>div').imgLiquid ({verticalAlign: 'center'}).click (function () {
-        var $that = $(this);
-        $that.addClass ('active').siblings ().removeClass ('active');
-        
-        $main.empty ().append ($('<img />').attr ('src', $that.data ('url')).click (function () {
-          if ($that.next ().length)
-            $that.next ().click ();
-          else
-            $bottom.find ('>div').first ().click ();
+        $bottom.empty ().append (result.images.map (function (t) {
+          return $('<div />').append ($('<img />').attr ('src', t.url.w100)).data ('url', t.url.ori);
         }));
-      }).first ().click ();
-      
-    })
-    .fail (function (result) {
-      if (/^[\],:{}\s]*$/.test (result.responseText.replace (/\\["\\\/bfnrtu]/g, '@').replace (/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace (/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-        alert (JSON.parse (result.responseText).message);
-        $main.attr ('title', JSON.parse (result.responseText).message);
-      } else { ajaxError (result); }
+
+        $bottom.find ('>div').imgLiquid ({verticalAlign: 'center'}).click (function () {
+          var $that = $(this);
+          $that.addClass ('active').siblings ().removeClass ('active');
+          
+          $main.empty ().append ($('<img />').attr ('src', $that.data ('url')).click (function () {
+            if ($that.next ().length)
+              $that.next ().click ();
+            else
+              $bottom.find ('>div').first ().click ();
+          }));
+        }).first ().click ();
+        
+      })
+      .fail (function (result) {
+        if (/^[\],:{}\s]*$/.test (result.responseText.replace (/\\["\\\/bfnrtu]/g, '@').replace (/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace (/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+          alert (JSON.parse (result.responseText).message);
+          $main.attr ('title', JSON.parse (result.responseText).message);
+        } else { ajaxError (result); }
+      });
+    }
+    function checkUsePsw (noPsw, psw) {
+      $.ajax ({
+        url: 'https://' + url + '/api/demos/psw/',
+        async: true, cache: false, dataType: 'json', type: 'GET',
+        data: {
+          uid: hash
+        }
+      })
+      .done (function (result) {
+        if (result) psw ();
+        else noPsw ();
+      })
+      .fail (function (result) {
+        if (/^[\],:{}\s]*$/.test (result.responseText.replace (/\\["\\\/bfnrtu]/g, '@').replace (/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace (/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+          alert (JSON.parse (result.responseText).message);
+          $main.attr ('title', JSON.parse (result.responseText).message);
+        } else { ajaxError (result); }
+      });
+    }
+
+    checkUsePsw (getInfo, function () {
+      var val = prompt ('請輸入密碼', '');
+      getInfo (val);
     });
   }
-  function checkUsePsw (noPsw, psw) {
-    $.ajax ({
-      url: 'https://' + url + '/api/demos/psw/',
-      async: true, cache: false, dataType: 'json', type: 'GET',
-      data: {
-        uid: hash
-      }
-    })
-    .done (function (result) {
-      if (result) psw ();
-      else noPsw ();
-    })
-    .fail (function (result) {
-      if (/^[\],:{}\s]*$/.test (result.responseText.replace (/\\["\\\/bfnrtu]/g, '@').replace (/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace (/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-        alert (JSON.parse (result.responseText).message);
-        $main.attr ('title', JSON.parse (result.responseText).message);
-      } else { ajaxError (result); }
-    });
-  }
-
-  checkUsePsw (getInfo, function () {
-    var val = prompt ('請輸入密碼', '');
-    getInfo (val);
-  });
-
 });
