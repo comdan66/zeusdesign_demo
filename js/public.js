@@ -14,7 +14,7 @@ var imgLiquid=imgLiquid||{VER:"0.9.944"};imgLiquid.bgs_Available=!1,imgLiquid.bg
 $(function () {
 
   var hash = window.location.hash.trim ().slice (1);
-  var url = 'dev.admin.zeusdesign.com.tw';
+  var url = 'admin.zeusdesign.com.tw';
   var $main = $('#main');
   var $mobile = $('#mobile');
   var $bottom = $('#bottom');
