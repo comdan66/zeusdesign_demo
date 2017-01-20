@@ -116,10 +116,10 @@ class Step {
   }
   public static function listS3Files () {
     try {
-      Step::newLine ('-', '列出 S3 上所有檔案', count ($list = S3::getBucket (BUCKET, NAME)));
+      Step::newLine ('-', '列出 S3 上所有檔案', count ($list = S3::getBucket (BUCKET)));
       Step::$s3Files = array_filter ($list, function ($file) {
         Step::progress ('列出 S3 上所有檔案');
-        return preg_match ('/^' . NAME . '\//', $file['name']);
+        return $file['name'];
       });
     } catch (Exception $e) { Step::error (array (' ' . $e->getMessage ())); }
 
